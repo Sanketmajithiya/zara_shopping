@@ -1,0 +1,1 @@
+print("Hello, i am from file app. and i am run automatically.")
