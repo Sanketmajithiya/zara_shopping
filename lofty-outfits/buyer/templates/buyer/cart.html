@@ -142,7 +142,11 @@ Cart
                 </div> <!-- end col -->
                 <div class="col-sm-6">
                     <div class="text-sm-end mt-2 mt-sm-0">
-                        <button id="payButton" class="btn btn-success">Checkout</button>
+                        <form action="{% url 'razor_pay_view' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" value="25" name="amount" id="order_amount">
+                            <button id="payButton" type="submit" class="btn btn-success">Checkout</button>
+                        </form>
                     </div>
                 </div> <!-- end col -->
             </div> <!-- end row-->
@@ -208,8 +212,9 @@ Cart
     var totalSelectedPriceElement = document.getElementById('total-selected-cart-item-price');
 
     var order_total_price = document.getElementById('final-order-price');
+    var order_amount = document.getElementById('order_amount');
+    
 
-    var final_price;
 
     // Calculate initial total price for each product
     quantitySelects.forEach(function (select) {
@@ -255,8 +260,7 @@ Cart
                 var totalPrice = parseFloat(totalPriceElement.textContent.replace('₹', '').trim());
                 totalSelectedPrice += totalPrice;
                 order_total_price.innerHTML = totalSelectedPrice + 25
-                // console.log(totalSelectedPrice, totalSelectedPrice + 25, '-----')
-                final_price = totalSelectedPrice + 25;
+                order_amount.value = totalSelectedPrice + 25;
             }
         });
         // Update the total price of selected cart items in the order summary
@@ -264,53 +268,36 @@ Cart
     }
 
 
-    //  Razorpay payment gatway setup
-    // Initialize Razorpay with your API Key
-    var razorpay = new Razorpay({
-        key: 'rzp_test_tLXwACg1XGpy8v',
-        // Change 'YOUR_API_KEY' to your actual Razorpay API key
-    });
+   
+  
 
-    // Handle payment success callback
-    function successCallback(payment_id) {
-        alert('Payment Successful. Payment ID: ' + payment_id);
-        // You can perform further actions here, like updating your database, showing a success message, etc.
-    }
-
-    // Handle payment error callback
-    function errorCallback(error) {
-        alert('Payment Failed: ' + error.description);
-        // You can handle payment failure scenarios here, like displaying an error message, retrying payment, etc.
-    }
-
-    // Define payment options
-    var options = {
-        amount: final_price * 100, // Amount in paise
-        currency: 'INR',
-        description: 'Example Payment',
-        image: "https://img.freepik.com/free-vector/bird-colorful-gradient-design-vector_343694-2506.jpg?size=626&ext=jpg&ga=GA1.1.698495765.1691986997&semt=ais",
-        handler: function (response) {
-            // Handle response after payment
-            if (response.razorpay_payment_id) {
-                successCallback(response.razorpay_payment_id);
-            } else {
-                errorCallback(response.error);
-            }
-        },
-        prefill: {
-            name: 'John Doe',
-            email: 'john@example.com',
-            contact: '+919876543210'
-        },
-        theme: {
-            color: "#3399cc"
-        }
-    };
-
-    // Create and open payment modal on button click
-    document.getElementById('payButton').onclick = function () {
-        razorpay.open(options);
-    };
+    // var options = {
+    //    
+    //   // Enter the Key ID generated from the Dashboard
+    //   key: "{{ razorpay_merchant_key }}", 
+    //    
+    //   // Amount is in currency subunits.
+    //   // Default currency is INR. Hence, 
+    //   // 50000 refers to 50000 paise
+    //   amount: "{{ razorpay_amount }}", 
+    //   currency: "{{ currency }}",
+    //    
+    //   // Your/store name.
+    //   name: "Dj Razorpay", 
+    //    
+    //   // Pass the `id` obtained in the response of Step 1
+    //   order_id: "{{ razorpay_order_id }}", 
+    //   callback_url: "{{ callback_url }}",
+    // };
+    //  
+    // // initialise razorpay with the options.
+    // var rzp1 = new Razorpay(options);
+    //  
+    // // add event listener to the payment button.
+    // document.getElementById("pay-btn").onclick = function (e) {
+    //   rzp1.open();
+    //   e.preventDefault();
+    // };
 </script>
 
 

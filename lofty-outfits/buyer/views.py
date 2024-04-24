@@ -1,14 +1,17 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.mail import send_mail
+from django.conf import settings
 
 from authentication.models import customersModel, customerAddressModel
 from master.utils.LO_RANDOM.otp import generate_otp
 from master.utils.LO_VALIDATORS.fields import is_valid_email, is_valid_password
+from master.utils.LO_PAYMENT_GATWAY.razorpay_payment_gateway import razorpay_client
 from seller.models import productsModel, categoriesModel
 from .models import ContactUSModel, cartModel
 
 import os
+
 
 def login_required(view_func):
     def wrapper(request, *args, **kwargs):
@@ -142,7 +145,21 @@ def index_view(request):
     return render(request, 'buyer/index.html')
 
 def new_collection_view(request):
-    return render(request, 'buyer/new_collection.html')
+    categories = categoriesModel.objects.order_by('-id')[:6]
+    
+    NEW_ITEMS = []
+    for category in categories:
+        latest_item = productsModel.objects.filter(category_id_id=category.id).order_by('-created_at').first()
+        print(latest_item is not None)
+        if latest_item is not None:
+            NEW_ITEMS.append(latest_item)
+
+    print(NEW_ITEMS)
+        
+    context = {
+        'items':NEW_ITEMS
+    }
+    return render(request, 'buyer/new_collection.html', context)
 
 @login_required
 def cart_view(request):
@@ -152,6 +169,35 @@ def cart_view(request):
         'cartItems':cartItems
     }
     return render(request, 'buyer/cart.html',context)
+
+
+@login_required
+def proceed_pay_view(request):
+    return render(request, 'buyer/proceed_to_pay.html')
+
+@login_required
+def razor_pay_view(request):
+    amount = int(request.POST['amount']) * 100
+    currency = 'INR'
+     # Create a Razorpay Order
+    razorpay_order = razorpay_client.order.create(dict(amount=amount,
+                                                       currency=currency,
+                                                       payment_capture='0'))
+    
+    print(razorpay_order)
+    
+    # order id of newly created order.
+    razorpay_order_id = razorpay_order['id']
+    callback_url = 'paymenthandler/'
+
+    context = {}
+    context['razorpay_order_id'] = razorpay_order_id
+    context['razorpay_merchant_key'] = settings.RAZOR_KEY_ID
+    context['razorpay_amount'] = amount
+    context['currency'] = currency
+    context['callback_url'] = callback_url
+
+    return render(request, 'buyer/proceed_to_pay.html', context=context)
 
 def prodcut_exist_in_cart(product_id):
     return cartModel.objects.filter(product_id=product_id).exists()

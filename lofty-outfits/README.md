@@ -78,5 +78,23 @@ Superuser created successfully.
 
 
 
-Pending work :
-add check for account is login or not
+# razor pay steps
+This is the main step of the process. First, we need to understand how payment works in Razorpay.
+
+Create a Razor Order from our Django Server.
+
+Pass Order Id and Other Options to the Frontend.
+
+The user clicks the payment button and pays with one of the payment methods.
+
+Razorpay handles Payment Success and Failure.
+
+On Failure, Razorpay facilitates retry of the payments.
+
+On Success, Razorpay makes a post request to a callback URL on our server.
+
+Verify the payment signature, to confirm that payment is authentic and isn’t tampered with.
+
+Once verified, capture the payment and render the success page.
+
+

@@ -32,9 +32,10 @@ class productsModel(baseModel):
             raise ValidationError("Selling price cannot be greater than MRP price")
 
     def save(self, *args, **kwargs):
-        self.full_clean()  # Validate before saving
-        self.discount = calculate_discount(self.mrp_price, self.selling_price)
-        self.product_id = generate_table_id(self)
+        if not self.product_id:
+            self.full_clean()  # Validate before saving
+            self.discount = calculate_discount(self.mrp_price, self.selling_price)
+            self.product_id = generate_table_id(self)
         super().save(*args, **kwargs)
 
     def __str__(self):

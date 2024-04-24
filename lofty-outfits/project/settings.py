@@ -131,9 +131,14 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media' )
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
+# Email config
 EMAIL_BACKEND = os.environ.get('EMAIL_BACKEND')
 EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS')
 EMAIL_HOST = os.environ.get('EMAIL_HOST')
 EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
 EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
 EMAIL_PORT = os.environ.get('EMAIL_PORT')
+
+# Razorpay config
+RAZOR_KEY_ID  = os.environ.get('RAZOR_KEY_ID')
+RAZOR_KEY_SECRET  = os.environ.get('RAZOR_KEY_SECRET')
