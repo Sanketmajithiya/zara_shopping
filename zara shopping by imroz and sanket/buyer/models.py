@@ -18,3 +18,6 @@ class ContactUSModel(baseModel):
     phone = models.CharField(max_length=255)
     message = models.TextField()
     status = models.CharField(choices=STATUS_CHOICES, default='unresolved', max_length=255)
+
+
+

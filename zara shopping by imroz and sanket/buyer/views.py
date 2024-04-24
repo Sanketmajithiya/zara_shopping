@@ -10,7 +10,6 @@ from .models import ContactUSModel
 import sanket_project
 from django.http import JsonResponse
 
-
 import os
 
 def login_required(view_func):
@@ -21,7 +20,6 @@ def login_required(view_func):
         return view_func(request, *args, **kwargs)
     return wrapper
 
-# Create your views here.
 def register_view(request):
     if request.method == 'POST':
         email_ = request.POST['email']
@@ -190,7 +188,7 @@ def profile_view(request):
         print("Customer ID does not exist in the session")
         return redirect('login_view')
 
-# @login_required
+@login_required
 def update_personal_info(request):
     print("here....")
     if request.method == 'POST':
@@ -241,13 +239,16 @@ def add_address_view(request):
 
 def forgot_password_view(request):
     if request.method == 'POST':
+        print("post")
         email_ = request.POST['email']
         action = request.POST.get('action') 
         try:
             check_user = customersModel.objects.get(email=email_)
+            print("this is user",check_user)
         except customersModel.DoesNotExist:
-            print("User doesn't exist")
+            print("THIIS User doesn't exist")
         else:
+            print("else")
             if check_user:
                 if action == 'resend_otp':
                     otp_ = generate_otp(6)
@@ -268,7 +269,40 @@ def forgot_password_view(request):
                 send_mail(subject, message, from_email, recipient_list)
                 check_user.otp = otp_
                 check_user.save()
-                context = {'email': email_}
-                return render(request, 'otp-verification.html', context)
-
+                context = {'cum_email': email_}
+                return render(request, 'buyer/change_password.html', context)
     return render(request, 'buyer/forgot.html')
+
+def reset_password_otp_verification(request):
+    if request.method == "POST":
+        cum_email = request.POST['email']
+        otp_ = request.POST['otp']
+        new_password_ = request.POST['new_password']
+        confirm_password_ = request.POST['confirm_password']
+
+        try : 
+            check_user = customersModel.objects.get(email=cum_email)
+        except Exception as e:
+            print(e)
+            return redirect("reset_password_otp_verification")
+        else:
+            if check_user:
+                if check_user.otp == otp_:
+                    if new_password_ == confirm_password_:
+                        check_user.password = new_password_
+                        check_user.save()
+                        print("password changed successfully")
+                        return redirect(login_view)
+                    else:
+                        print("both password doesn't match")
+                        context = {'cum_email': cum_email}
+                        return render(request, 'buyer/change_password.html', context)
+                else:
+                    print("invalid otp")
+                    context = {'cum_email': cum_email}
+                    return render(request, 'buyer/change_password.html', context)
+            
+    return render(request, "buyer/change_password.html")
+
+
+
