@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple HTML Form</title>
+</head>
+<body>
+    <ma>
+    <form action="" method="post"  enctype='multipart/form-data'>
+         {% csrf_token %}
+         {% comment %} {% for filed in form %}
+         {{filed.lable_tag}} {{filed}} <br><br>
+          {%endfor%}  {% endcomment %}
+          {{form}} 
+        
+        <input type="submit" value="Submit">
+    </form>
+
+    <Table> 
+        <thead>
+            <th>ID</th>
+            <th>profile</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Password</th>
+            <th>action</th>
+            
+
+        <thead>
+        <tbody>
+
+            {% for stu in students %}
+             <tr>
+           
+                <td>{{stu.id}}<td>
+                <td><image>{{stu.profile}}<td>
+                <td>{{stu.first_name}}<td>
+                <td>{{stu.last_name}}<td>
+                <td>{{stu.email}}<td>
+                <td>{{stu.password}}<td>
+                    <td>
+                        <a href={% url 'edit' student_id=stu.id %}>edit</a>                        
+                        <a href={% url 'delete' student_id=stu.id %}>delete</a>                 
+                   <td>
+            <tr>
+                
+            {% endfor %}
+
+        </tbody>
+    </Table>
+    
+</body>
+</html>
+
