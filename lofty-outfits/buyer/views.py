@@ -1,3 +1,4 @@
+from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.mail import send_mail
@@ -6,7 +7,7 @@ from django.conf import settings
 from authentication.models import customersModel, customerAddressModel
 from master.utils.LO_RANDOM.otp import generate_otp
 from master.utils.LO_VALIDATORS.fields import is_valid_email, is_valid_password
-from master.utils.LO_PAYMENT_GATWAY.razorpay_payment_gateway import razorpay_client
+from master.utils.LO_PAYMENT_GATWAY.razorpay_payment_gateway import client
 from seller.models import productsModel, categoriesModel
 from .models import ContactUSModel, cartModel
 
@@ -176,28 +177,13 @@ def proceed_pay_view(request):
     return render(request, 'buyer/proceed_to_pay.html')
 
 @login_required
-def razor_pay_view(request):
-    amount = int(request.POST['amount']) * 100
-    currency = 'INR'
-     # Create a Razorpay Order
-    razorpay_order = razorpay_client.order.create(dict(amount=amount,
-                                                       currency=currency,
-                                                       payment_capture='0'))
-    
-    print(razorpay_order)
-    
-    # order id of newly created order.
-    razorpay_order_id = razorpay_order['id']
-    callback_url = 'paymenthandler/'
+def pay(request,amt):
+    amount = int(amt)*100
+    data = { "amount": amount, "currency": "INR", "receipt": "order_rcptid_11" }
+    p = client.order.create(data=data)   
+    print(p)
+    return JsonResponse(p)
 
-    context = {}
-    context['razorpay_order_id'] = razorpay_order_id
-    context['razorpay_merchant_key'] = settings.RAZOR_KEY_ID
-    context['razorpay_amount'] = amount
-    context['currency'] = currency
-    context['callback_url'] = callback_url
-
-    return render(request, 'buyer/proceed_to_pay.html', context=context)
 
 def prodcut_exist_in_cart(product_id):
     return cartModel.objects.filter(product_id=product_id).exists()

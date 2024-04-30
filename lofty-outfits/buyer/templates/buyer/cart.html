@@ -110,14 +110,26 @@ Cart
                                 </div>
                             </div>
                             <div class="col-md-5">
+
+                                Sure, here's the HTML code for selecting multiple quantities:
+
+                                html
+                                Copy code
                                 <div class="mt-3">
                                     <p class="text-muted mb-2">Quantity</p>
                                     <div class="d-inline-flex">
                                         <select class="form-select form-select-sm w-xl" name="quantity">
-                                            <option value="1">1</option>
+                                            <!-- Corrected loop syntax -->
+                                            {% for i in "123456789" %}
+                                                {% with i|add:"0" as num %}
+                                                    <option value="{{ num }}" {% if cartitem.quantity == num %} selected {% endif %}>{{ num }}</option>
+                                                {% endwith %}
+                                            {% endfor %}
                                         </select>
                                     </div>
                                 </div>
+                                
+                                
                             </div>
                             <div class="col-md-3">
                                 <div class="mt-3">
@@ -142,11 +154,8 @@ Cart
                 </div> <!-- end col -->
                 <div class="col-sm-6">
                     <div class="text-sm-end mt-2 mt-sm-0">
-                        <form action="{% url 'razor_pay_view' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" value="25" name="amount" id="order_amount">
-                            <button id="payButton" type="submit" class="btn btn-success">Checkout</button>
-                        </form>
+                        <input type="hidden" value="25" name="amount" id="order_amount">
+                        <button id="rzp-button1" type="submit" class="btn btn-success">Pay with razorpay</button>
                     </div>
                 </div> <!-- end col -->
             </div> <!-- end row-->
@@ -213,7 +222,7 @@ Cart
 
     var order_total_price = document.getElementById('final-order-price');
     var order_amount = document.getElementById('order_amount');
-    
+
 
 
     // Calculate initial total price for each product
@@ -267,37 +276,57 @@ Cart
         totalSelectedPriceElement.textContent = '₹ ' + totalSelectedPrice.toFixed(2);
     }
 
+    document.getElementById("rzp-button1").onclick = function (e) {
+        e.preventDefault();
+        var amt = document.getElementById("final-order-price").textContent;
+        fetch(`pay/${amt}`).then((data) => {
+            return data.json();
+        }).then((result) => {
+            alert(result);
+            var options = {
+                key: "rzp_test_MZxvPTLJat6IQd", // Enter the Key ID generated from the Dashboard
+                amount: result.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                currency: "INR",
+                name: "Acme Corp",
+                description: "Test Transaction",
+                image: "https://example.com/your_logo",
+                order_id: result.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                handler: function (response) {
+                    alert(response.razorpay_payment_id);
+                    alert(response.razorpay_order_id);
+                    alert(response.razorpay_signature);
+                },
+                prefill: {
+                    name: "Gaurav Kumar",
+                    email: "gaurav.kumar@example.com",
+                    contact: "9000090000",
+                },
+                notes: {
+                    address: "Razorpay Corporate Office",
+                },
+                theme: {
+                    color: "#3399cc",
+                },
+            };
 
-   
-  
+            var rzp1 = new Razorpay(options);
+            rzp1.on("payment.failed", function (response) {
+                alert(response.error.code);
+                alert(response.error.description);
+                alert(response.error.source);
+                alert(response.error.step);
+                alert(response.error.reason);
+                alert(response.error.metadata.order_id);
+                alert(response.error.metadata.payment_id);
+            });
+            rzp1.open();
+        })
+            .catch((err) => {
+                console.log(err);
+            });
 
-    // var options = {
-    //    
-    //   // Enter the Key ID generated from the Dashboard
-    //   key: "{{ razorpay_merchant_key }}", 
-    //    
-    //   // Amount is in currency subunits.
-    //   // Default currency is INR. Hence, 
-    //   // 50000 refers to 50000 paise
-    //   amount: "{{ razorpay_amount }}", 
-    //   currency: "{{ currency }}",
-    //    
-    //   // Your/store name.
-    //   name: "Dj Razorpay", 
-    //    
-    //   // Pass the `id` obtained in the response of Step 1
-    //   order_id: "{{ razorpay_order_id }}", 
-    //   callback_url: "{{ callback_url }}",
-    // };
-    //  
-    // // initialise razorpay with the options.
-    // var rzp1 = new Razorpay(options);
-    //  
-    // // add event listener to the payment button.
-    // document.getElementById("pay-btn").onclick = function (e) {
-    //   rzp1.open();
-    //   e.preventDefault();
-    // };
+    };
+
 </script>
 
 
