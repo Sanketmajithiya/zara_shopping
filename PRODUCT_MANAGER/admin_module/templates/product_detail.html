@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Details</title>
+    <style>
+        a{
+            text-decoration: none;
+            font-size: larger;
+            border: 1px solid gray;
+            padding: 3px;
+            border-radius: 5px;
+            color: blue;
+        }
+        .link{
+            border: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="nav">    
+        <a href="">home</a>
+        <a href="{% url 'log_out' %}">logout</a>
+    </div>
+    <hr>
+
+    <div class="form">
+        <form action="{% url 'product_detail' p_id=products.p_id %}" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+
+
+            <label for="product_id">Product ID : </label><br>
+            <input type="text" name="p_id" value="{{products.p_id}}" disabled><br><br>
+
+
+            <label for="product_name">Product Name : </label><br>
+            <input type="text" name="product_name" value="{{products.p_name}}"  disabled><br><br>
+
+
+            <label for="price">Price : </label><br>
+            <input type="text" name="price"><br><br>
+            
+            
+            <label for="image">Product image : </label><br>
+            <input type="file" name="image" accept="image/*"><br><br>
+            
+            
+            <label for="model">Model : </label><br>
+            <input type="text" name="model"><br><br>
+            
+            
+            <label for="ram">RAM : </label><br>
+            <input type="text" name="ram"><br><br>
+
+
+
+            <input type="submit"><br><br>
+        </form>
+    </div>
+
+    <hr>
+    <br><br>
+    {%comment%}
+    <div class="table">
+        <table border="1">
+            <tr>
+                <thead>
+                    <th>PRODUCT ID</th>
+                    <th>PRODUCT NAME</th>
+                </thead>
+            </tr>
+            
+            {% for product in products %}
+            <tbody>
+                <tr>
+                    <td>{{product.p_id}}</td>
+                    <td><a class="link" href="{% url 'product_detail' p_id=product.p_id %}
+                        ">{{product.p_name.upper }}</a></td>
+                </tr>                
+            </tbody>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+</html>
+
+{% url '#' %}
+{%endcomment%}
