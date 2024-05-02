@@ -21,7 +21,7 @@ class Product_name(models.Model):
 class product_details(models.Model):
     product_name = models.ForeignKey(Product_name, on_delete=models.CASCADE, related_name='products')
     price = models.IntegerField(default=True)
-    image = models.ImageField(upload_to="admin_module/images")
+    image = models.ImageField(upload_to="admin_module/images", blank=True)
     model = models.CharField(max_length=100)
     ram = models.CharField(max_length=100)
 

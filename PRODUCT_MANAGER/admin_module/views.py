@@ -60,6 +60,7 @@ def log_out(request):
 @is_logged_in
 def product_detail(request, p_id):
     product = Product_name.objects.get(p_id=p_id) 
+    details = product_details.objects.all()
     if request.method == "POST":
         price = request.POST["price"]
         image = request.FILES['image']
@@ -74,9 +75,20 @@ def product_detail(request, p_id):
             ram=ram)
         new_product.save()
 
-        return redirect("add_product_name")
+        return redirect("product_detail", p_id = product.p_id)
 
-    context = {"products": product}
+    context = {"products": product, "details":details}
     return render(request, "product_detail.html", context)
 
+def show_details_view(request):
+    details = product_details.objects.all()
 
+
+    context = {"details":details}
+    return render(request, "show_detail.html", context)
+
+
+def delete_detail(request,id):
+    detail = product_details.objects.get(id=id)
+    detail.delete()
+    return redirect('show_details_view')

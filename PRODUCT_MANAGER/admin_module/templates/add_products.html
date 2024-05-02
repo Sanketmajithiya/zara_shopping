@@ -16,6 +16,12 @@
         .link{
             border: none;
         }
+        .green{
+            color: green;
+        }
+        .red{
+            color: red;
+        }
     </style>
 </head>
 <body>
@@ -44,6 +50,7 @@
                 <thead>
                     <th>PRODUCT ID</th>
                     <th>PRODUCT NAME</th>
+                    <th>Action</th>
                 </thead>
             </tr>
             
@@ -53,6 +60,10 @@
                     <td>{{ product.p_id }}</td>
                     <td>
                         <a class="link" href="{% url 'product_detail' p_id=product.p_id %}">{{ product.p_name.upper }}</a>
+                    </td>
+                    <td>
+                        <a class="link green" href="">edit</a>
+                        <a class="link red" href="">delete</a>
                     </td>
                 </tr>                
                 {% endfor %}
