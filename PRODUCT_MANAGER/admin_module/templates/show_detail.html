@@ -64,7 +64,7 @@ thead th {
                     <th>Image</th>
                     <th>Model</th>
                     <th>RAM</th>
-                    <th>Action</th>
+                    <th colspan="2">Action</th>
                 </thead>
             </tr>
             
@@ -78,8 +78,10 @@ thead th {
                         <td>{{detail.model}}</td>
                         <td>{{detail.ram}}</td>
                         <td>
-                            <a class="link green" href="">edit</a>
-                            <a class="link red" href="{% url 'delete_detail' id=detail.id %}">delete</a>
+                            <a class="link green" href="{% url 'update_detail' id=detail.id %}">edit</a>
+                        </td>
+                        <td>
+                        <a class="link red" href="{% url 'delete_detail' id=detail.id %}">delete</a>
                         </td>
                     </tr>
                 </tbody>

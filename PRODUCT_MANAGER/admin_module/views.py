@@ -33,21 +33,6 @@ def admin_login(request):
     return render(request, "login.html")
 
 
-@is_logged_in
-def add_product_name(request):
-    products = Product_name.objects.all()
-
-    if request.method == "POST":
-        p_id= request.POST["product_id"]
-        p_name= request.POST["product_name"]
-
-        new_product = Product_name.objects.create(p_id=p_id,p_name=p_name)    
-        return redirect("add_product_name")
-
-    context = {"products":products}
-    return render(request, "add_products.html",context)
-
-
 def log_out(request):
     try:
         del request.session['admin_id']
@@ -57,6 +42,22 @@ def log_out(request):
         print("You have been successfully logged out.")
     return redirect("admin_login")
    
+
+@is_logged_in
+def add_product_name(request):
+    products = Product_name.objects.all()
+
+    if request.method == "POST":
+        p_id= request.POST["product_id"]
+        p_name= request.POST["product_name"]
+
+        new_product = Product_name.objects.create(p_id=p_id, p_name=p_name)    
+        return redirect("add_product_name")
+
+    context = {"products":products}
+    return render(request, "add_products.html",context)
+
+
 @is_logged_in
 def product_detail(request, p_id):
     product = Product_name.objects.get(p_id=p_id) 
@@ -80,15 +81,67 @@ def product_detail(request, p_id):
     context = {"products": product, "details":details}
     return render(request, "product_detail.html", context)
 
+
+@is_logged_in
 def show_details_view(request):
     details = product_details.objects.all()
-
 
     context = {"details":details}
     return render(request, "show_detail.html", context)
 
 
+@is_logged_in
+def update_detail(request, id):
+    detail = product_details.objects.get(id=id)
+    product = Product_name.objects.filter(p_name=detail.product_name) 
+
+    if request.method == "POST":
+        price = request.POST.get("price")
+        model = request.POST.get("model")
+        ram = request.POST.get("ram")
+        image = request.FILES.get("image")
+
+        detail.price = price
+        detail.model = model
+        detail.ram = ram
+
+        if image:
+            detail.image = image
+
+        detail.save()  
+        return redirect('show_details_view')
+
+    context = {"detail": detail, "product": product}
+    return render(request, "update_detail.html", context)
+
+
+@is_logged_in
 def delete_detail(request,id):
     detail = product_details.objects.get(id=id)
     detail.delete()
     return redirect('show_details_view')
+
+
+@is_logged_in
+def delete_name(request, p_id):
+    product = Product_name.objects.get(p_id=p_id) 
+    product.delete()
+    return redirect('add_product_name')
+
+
+@is_logged_in
+def update_name(request, p_id):
+    product = Product_name.objects.get(p_id=p_id) 
+
+    if request.method == "POST":
+        # new_p_id= request.POST["product_id"]
+        new_p_name= request.POST["product_name"]
+
+        # product.p_id = new_p_id
+        product.p_name = new_p_name    
+        product.save()
+
+        return redirect("add_product_name")
+
+    context = {"product":product}
+    return render(request,'update_name.html', context)

@@ -62,8 +62,8 @@
                         <a class="link" href="{% url 'product_detail' p_id=product.p_id %}">{{ product.p_name.upper }}</a>
                     </td>
                     <td>
-                        <a class="link green" href="">edit</a>
-                        <a class="link red" href="">delete</a>
+                        <a class="link green" href="{% url 'update_name' p_id=product.p_id %}">edit</a>
+                        <a class="link red" href="{% url 'delete_name' p_id=product.p_id %}">delete</a>
                     </td>
                 </tr>                
                 {% endfor %}
@@ -74,7 +74,7 @@
 </html>
 
 {%comment%}
-{% url 'product_detail' p_id=product.p_id %}
+{% url 'update_name' p_id=product.p_id %}
 {% url 'product_detail' p_id=product.p_id %}
 {% url '#' %}
 {%endcomment%}
