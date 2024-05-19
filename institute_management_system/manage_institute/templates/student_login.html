@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login</title>
+    <title>Student Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -78,7 +78,7 @@
 <body>
     <div class="login-form">
         <h2>Login</h2>
-        <form action="{% url 'login_view' %}" method="post">
+        <form action="{% url 'student_login_view' %}" method="post">
             {% csrf_token %}
             <div class="messages">
                 {% for message in messages %}
@@ -93,9 +93,6 @@
         </form>
         <div class="forgot-password-link">
             <a href="">Forgot Password?</a>
-        </div>
-        <div class="register-link">
-            <p>Don't have an account? <a href="{% url 'register_teacher' %}">Register</a></p>
         </div>
     </div>
 </body>
