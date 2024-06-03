@@ -8,7 +8,7 @@ from django.http import HttpResponse
 from .models import Teacher
 from .forms import ForgotPasswordForm, ResetPasswordForm
 from .utils.otp import generate_otp
-from .models import Teacher, Department, Student, Club, Book, forgot
+from .models import Teacher, Department, Student, Club, Book
 from .forms import ClubForm, BookForm,  StudentForm
 
 def is_logged_in(func):
@@ -228,7 +228,6 @@ def student_delete(request, pk):
 
 def forgot_password_view(request):
     if request.method == 'POST':
-        print("post")
         email_ = request.POST['email']
         action = request.POST.get('action') 
         try:
@@ -279,8 +278,7 @@ def reset_password_otp_verification(request):
         
         if student.otp == entered_otp:
            
-            student.set_password(new_password)
-            student.otp = None  
+            student.password =new_password
             student.save()
             return HttpResponse("Password successfully reset")
         else:
