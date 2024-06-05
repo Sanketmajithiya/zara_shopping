@@ -36,22 +36,19 @@ urlpatterns = [
     path('forgot_password/', forgot_password_view, name='forgot_password_view'),
     path('reset_password_otp_verification/', reset_password_otp_verification,
     name='reset_password_otp_verification'),
+    
+    path('forgot_password_t/', forgot_password_t, name='forgot_password_view_t'),
+    path('reset_password_otp_verification_t/', reset_password_otp_verification_t,
+    name='reset_password_otp_verification_t'),
 ]    
     
     
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+""" 
+wrapper :- in python we want to modify or extend the behavior of an existing funnction,method, or class
+without modifying its source code
+
+
+"""    
     
     
     
