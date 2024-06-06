@@ -30,9 +30,6 @@ urlpatterns = [
     path('students/<int:pk>/update/', student_update, name='student_update'),
     path('students/<int:pk>/delete/', student_delete, name='student_delete'),
     
-    path('rough_view/',rough_view, name='rough_view'),
-    
-    
     path('forgot_password/', forgot_password_view, name='forgot_password_view'),
     path('reset_password_otp_verification/', reset_password_otp_verification,
     name='reset_password_otp_verification'),
@@ -44,12 +41,6 @@ urlpatterns = [
 ]    
     
     
-""" 
-wrapper :- in python we want to modify or extend the behavior of an existing funnction,method, or class
-without modifying its source code
-
-
-"""    
     
     
     
@@ -64,15 +55,17 @@ without modifying its source code
     
 
  
+
+
+  
  
 """
     wrappers in Python when we want to modify or extend the behavior of an existing function, method, or class without modifying its source code
 
-    decoreters:- chage the function behaviour with out changeing that actual code .    
-    
-    wrapper in python when we want to modify or extend the behavior of an exiting function,method, or class without modifying its source code .
-    
-    
+    wrapper :- in python we want to modify or extend the behavior of an existing funnction,method, or class
+    without modifying its source code
+
+    decoreters:- chage the function behaviour with out changeing that actual code .     
     
 
 """

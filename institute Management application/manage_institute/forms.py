@@ -46,17 +46,5 @@ class ResetPasswordForm(forms.Form):
         
         
         
-# def verify_otp(request):
-#     user = request.user 
-#     if request.method == 'POST':
-#         form = OTPForm(request.POST, user=user)
-#         if form.is_valid():
-#             return ('success_url')
-#     else:
-#         form = OTPForm(user=user)
-
-#     return (request, 'verify_otp.html', {'form': form})  
-       
-       
        
         
