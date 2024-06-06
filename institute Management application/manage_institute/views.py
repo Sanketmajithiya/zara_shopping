@@ -233,7 +233,6 @@ def forgot_password_view(request):
                 check_user.otp = otp_
                 check_user.save()
                 return JsonResponse({'success': True, 'message': 'OTP Resent successfully'})
-
             otp_ = generate_otp(6)
             subject = "Authentication Code for [Forgot password]"
             message = f"Code for [Password Change]: {otp_}"
@@ -246,26 +245,6 @@ def forgot_password_view(request):
             return render(request, 'change_password.html', context)
     return render(request, 'forgot.html')
 
-def reset_password_otp_verification(request):
-    if request.method == 'POST':
-        email = request.POST.get('email')
-        entered_otp = request.POST.get('otp')
-        new_password = request.POST.get('new_password')
-        confirm_password = request.POST.get('confirm_password')
-
-        if new_password != confirm_password:
-            return JsonResponse("Passwords do not match")
-
-        student = get_object_or_404(Student, email=email)
-
-        if student.otp == entered_otp:
-            student.password = new_password
-            student.save()
-            return JsonResponse("Password successfully reset")
-        else:
-            return JsonResponse("Invalid OTP")
-
-    return render(request, 'change_password.html')
 
 def forgot_password_t(request):
     if request.method == 'POST':
@@ -321,3 +300,26 @@ def reset_password_otp_verification_t(request):
             return JsonResponse("Invalid OTP")
 
     return render(request, 'change_password_t.html')
+
+
+
+# def reset_password_otp_verification(request):
+    # if request.method == 'POST':
+    #     email = request.POST.get('email')
+    #     entered_otp = request.POST.get('otp')
+    #     new_password = request.POST.get('new_password')
+    #     confirm_password = request.POST.get('confirm_password')
+
+    #     if new_password != confirm_password:
+    #         return JsonResponse("Passwords do not match")
+
+    #     student = get_object_or_404(Student, email=email)
+
+    #     if student.otp == entered_otp:
+    #         student.password = new_password
+    #         student.save()
+    #         return JsonResponse("Password successfully reset",safe=False)
+    #     else:
+    #         return JsonResponse("Invalid OTP",safe=False)
+
+    # return render(request, 'change_password.html')

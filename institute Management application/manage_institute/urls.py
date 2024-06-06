@@ -10,13 +10,11 @@ urlpatterns = [
     path('home_view/', home_view, name='home_view'),
     path('student_home_view/', student_home_view, name='student_home_view'),
 
-    
     path('clubs/', club_list, name='club_list'),
     path('clubs/create/', club_create, name='club_create'),
     path('clubs/<int:pk>/', club_detail, name='club_detail'),
     path('clubs/<int:pk>/update/', club_update, name='club_update'),
     path('clubs/<int:pk>/delete/', club_delete, name='club_delete'),
-
 
     path('books/', book_list, name='book_list'),
     path('books/create/', book_create, name='book_create'),
@@ -40,6 +38,7 @@ urlpatterns = [
     path('forgot_password_t/', forgot_password_t, name='forgot_password_view_t'),
     path('reset_password_otp_verification_t/', reset_password_otp_verification_t,
     name='reset_password_otp_verification_t'),
+    
 ]    
     
     
@@ -73,7 +72,5 @@ without modifying its source code
     
     
     
-
-
 
 """
