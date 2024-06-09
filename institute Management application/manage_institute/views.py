@@ -52,8 +52,6 @@ def login_view(request):
                 return redirect('home_view')
     return render(request, 'login.html')
 
-def rough_view(request):
-    return render(request, 'rough.html')
 
 @is_logged_in
 def home_view(request):
@@ -216,6 +214,10 @@ def student_delete(request, pk):
         return redirect('student_list')
     return render(request, 'for_student/student_confirm_delete.html', {'student': student})
 
+
+
+
+
 def forgot_password_view(request):
     if request.method == 'POST':
         email_ = request.POST['email']
@@ -270,39 +272,39 @@ def reset_password_otp_verification(request):
     return render(request, 'change_password.html')
 
 
-def forgot_password_t(request):
+
+
+def forgot_password_view_t(request):
     if request.method == 'POST':
-        email_ = request.POST.get('email')
-        action = request.POST.get('action')
-
-        if not email_ or not action:
-            return HttpResponseBadRequest("Missing 'email' or 'action' parameter")
-
+        email_ = request.POST['email']
+        action = request.POST.get('action') 
         try:
             check_user = Teacher.objects.get(email=email_)
         except Teacher.DoesNotExist:
             print("This user doesn't exist")
             return JsonResponse({'success': False, 'message': 'User does not exist'})
-
-        otp_ = generate_otp(6)
-        subject = "Authentication Code for [Forgot password]"
-        message = f"Code for [Password Change]: {otp_}"
-        from_email = sanket_project.settings.EMAIL_HOST_USER
-        recipient_list = [email_]
-
-        if action == 'resend_otp':
+        else:
+            if action == 'resend_otp':
+                otp_ = generate_otp(6)
+                subject = "Authentication Code for [Forgot password]"
+                message = f"Code for [Password Change]: {otp_}"
+                from_email = sanket_project.settings.EMAIL_HOST_USER
+                recipient_list = [email_]
+                send_mail(subject, message, from_email, recipient_list)
+                check_user.otp = otp_
+                check_user.save()
+                return JsonResponse({'success': True, 'message': 'OTP Resent successfully'})
+            otp_ = generate_otp(6)
+            subject = "Authentication Code for [Forgot password]"
+            message = f"Code for [Password Change]: {otp_}"
+            from_email = sanket_project.settings.EMAIL_HOST_USER
+            recipient_list = [email_]
             send_mail(subject, message, from_email, recipient_list)
             check_user.otp = otp_
             check_user.save()
-            return JsonResponse({'success': True, 'message': 'OTP Resent successfully'})
-
-        send_mail(subject, message, from_email, recipient_list)
-        check_user.otp = otp_
-        check_user.save()
-        context = {'cum_email': email_}
-        return render(request, 'change_password_t.html', context)
-
-    return render(request, 'forgot.html')
+            context = {'cum_email': email_}
+            return render(request, 'teacher/change_password_t.html', context)
+    return render(request, 'teacher/forgot_t.html')
 
 def reset_password_otp_verification_t(request):
     if request.method == 'POST':
@@ -319,10 +321,13 @@ def reset_password_otp_verification_t(request):
         if teacher.otp == entered_otp:
             teacher.password = new_password
             teacher.save()
-            return JsonResponse("Password successfully reset")
+            return JsonResponse("Password successfully reset",safe=False)
         else:
-            return JsonResponse("Invalid OTP")
+            return JsonResponse("Invalid OTP",safe=False)
 
-    return render(request, 'change_password_t.html')
+    return render(request, 'teacher/change_password_t.html')
+
+
+
 
 

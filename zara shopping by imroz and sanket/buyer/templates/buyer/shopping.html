@@ -9,7 +9,7 @@ Shopping
 <div class="container nav-scroller py-1 mb-2">
     <nav class="nav d-flex justify-content-center ">
         
-        <a class="p-2" style="text-decoration: none; color: coral; font-size:large; font-weight: bold;" >Categories : </a>
+        <a class="p-2" style="text-decoration: none; color: rgb(80, 150, 255); font-size:large; font-weight: bold;" >Categories : </a>
         {% for category in categoris %}
         <a class="p-2 link-secondary" href="#">{{category.name}}</a>
         {% endfor %}
@@ -42,8 +42,8 @@ Shopping
                 
                             <!-- Buy Button -->
                             <div class="mt-auto"> <!-- Added mt-auto class to push buttons to the bottom -->
-                                <button class="btn btn-warning">Buy now</button>
-                                <button class="btn btn-outline-warning">Add to Cart</button>
+                                <a href="{% url 'buy_now' product_id=product.id %}"><button class="btn btn-warning">Buy now</button></a>
+                                <a href="{% url 'add_item_in_cart' product_id=product.id %}"><button class="btn btn-outline-warning">Add to Cart</button></a>
                             </div>
                         </div>
                     </div>

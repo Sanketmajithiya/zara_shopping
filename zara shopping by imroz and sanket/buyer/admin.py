@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ContactUSModel
+from .models import ContactUSModel, cartModel,Order,OrderItem
 # Register your models here.
 
 class ContactUSModelAdmin(admin.ModelAdmin):
@@ -11,3 +11,9 @@ class ContactUSModelAdmin(admin.ModelAdmin):
     list_per_page = 10
 
 admin.site.register(ContactUSModel,ContactUSModelAdmin)
+
+admin.site.register(cartModel)
+admin.site.register(Order)
+admin.site.register(OrderItem)
+
+

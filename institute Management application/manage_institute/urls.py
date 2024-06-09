@@ -31,13 +31,11 @@ urlpatterns = [
     path('students/<int:pk>/delete/', student_delete, name='student_delete'),
     
     path('forgot_password/', forgot_password_view, name='forgot_password_view'),
-    path('reset_password_otp_verification/', reset_password_otp_verification,
-    name='reset_password_otp_verification'),
+    path('reset_password_otp_verification/', reset_password_otp_verification,    name='reset_password_otp_verification'),
     
-    path('forgot_password_t/', forgot_password_t, name='forgot_password_view_t'),
-    path('reset_password_otp_verification_t/', reset_password_otp_verification_t,
-    name='reset_password_otp_verification_t'),
-    
+    path('forgot_password_t/', forgot_password_view_t, name='forgot_password_view_t'),
+    path('reset_password_otp_verification_t/', reset_password_otp_verification_t,    name='reset_password_otp_verification_t'),
+        
 ]    
     
     

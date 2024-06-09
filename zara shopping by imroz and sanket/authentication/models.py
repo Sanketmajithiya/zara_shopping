@@ -6,10 +6,11 @@ class customersModel(baseModel):
     customer_id = models.CharField(primary_key=True,max_length=255, blank=True)
     first_name = models.CharField(max_length=255, blank=True)
     last_name = models.CharField(max_length=255, blank=True)
-    email = models.EmailField(max_length=255, blank=False, null=False)
+    email = models.EmailField(max_length=255, blank=False, null=False, unique=True)
     mobile = models.CharField(max_length=255, blank=True)
     password = models.CharField(max_length=255)
     is_activate = models.BooleanField(default=False)
+    is_added_address = models.BooleanField(default=False)
     otp = models.CharField(max_length=10, default="111111")
 
     def __str__(self):

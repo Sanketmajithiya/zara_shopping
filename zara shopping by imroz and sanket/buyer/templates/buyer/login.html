@@ -1,51 +1,99 @@
-{% extends 'buyer/base.html' %}
+{% extends 'buyer/out_base.html' %}
 {% load static %}
 {% block title %}
-login
+Log In
 {% endblock%}
 {% block styles %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f2f2f2;
+    }
+
+    .login-form {
+        background-color: #fff;
+        padding: 20px;
+        border-radius: 5px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        max-width: 400px;
+        margin: 0 auto;
+    }
+
+    .login-form label {
+        display: block;
+        margin-bottom: 10px;
+    }
+
+    .login-form input[type="email"],
+    .login-form input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin-bottom: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    .login-form button {
+        width: 100%;
+        padding: 10px;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+
+    .login-form button:hover {
+        background-color: #0056b3;
+    }
+
+    .forgot-password-link {
+        text-align: center;
+        margin-top: 10px;
+    }
+
+    .forgot-password-link a {
+        color: #007bff;
+        text-decoration: none;
+    }
+    .space{
+        height: 550px;
+        align-content: center;
+    }
+    .bi-2x {
+        font-size: 2em;
+    }
+    .color{
+      color:blue;
+    }
+</style>
 {% endblock %}
 {% block body %}
-<section class="vh-100">
-    <h1 class="display-6 fw-bold text-center text-dark my-3">Login here...</h1>
-    <div class="container-fluid h-custom my-5">
-      <div class="row d-flex justify-content-center align-items-center h-100">
-        <div class="col-md-9 col-lg-6 col-xl-5">
 
-        </div>
-        <div class="col-md-8 col-lg-6 col-xl-4 offset-xl-1">
-          <form action="" method="post">
+
+<body>
+    <div class="space">
+    <div class="login-form">
+        <h2>Login</h2>
+        <form action="{% url 'login_view' %}" method="post">
             {% csrf_token %}
-            <!-- Email input -->
-            <div class="form-outline mb-4">
-              <label class="form-label" for="email">Email address</label>
-              <input type="email" id="email" name="email" class="form-control form-control-lg"
-                placeholder="Enter a valid email address" />
-            </div>
-  
-            <!-- Password input -->
-            <div class="form-outline mb-3">
-              <label class="form-label" for="pwd">Password</label>
-              <input type="password" id="pwd" name="password" class="form-control form-control-lg"
-                placeholder="Enter password" />
-            </div>
-  
-            <div class="d-flex justify-content-between align-items-center">
-            
-              <a href="{% url 'forgot_password_view' %}" class="text-body">Forgot password?</a>
-            </div>
-  
-            <div class="text-center text-lg-start mt-4 pt-2">
-              <button type="submit" class="btn btn-primary btn-lg"
-                style="padding-left: 2.5rem; padding-right: 2.5rem;">Login</button>
-              <p class="small fw-bold mt-2 pt-1 mb-0">Don't have an account? <a href="{% url 'register_view' %}"
-                  class="link-danger">Register</a></p>
-            </div>
-  
-          </form>
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <button type="submit">Login</button>
+        </form>
+        <div class="forgot-password-link">
+            <a href="{% url 'forgot_password_view' %}">Forgot Password?</a>
         </div>
-      </div>
+        <div class="register-link">
+            <p>Don't have an account? <a href="{% url 'register_view' %}">Register</a></p>
+        </div>
     </div>
-    
-</section>
+</div>
+</body>
+</html>
+
+
 {% endblock %}

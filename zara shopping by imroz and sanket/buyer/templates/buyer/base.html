@@ -7,26 +7,27 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>
         {% block title %}
-        {% endblock %} | Lofty-Outfits
-    </title>
+        {% endblock %} | ZARA-ART
+    </title> 
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
 
-    <!-- Bootstrap Icons -->
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-
-    {% block styles %}
-    {% endblock %}
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+        <!-- Bootstrap Icons -->
+    
+{% block styles %}
     <style>
+
         .bi-2x {
             font-size: 2em;
         }
     </style>
+{% endblock %}
 </head>
 
 <body>
-
+    
     <div class="container-fluid topheader border-bottom">
         <div class="row py-3">
             <div class="col-12 d-flex justify-content-end gap-3">
@@ -40,33 +41,37 @@
             </div>
         </div>
     </div>
-
+    
     <!-- navbar start -->
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="#">
-                <img src="{% static 'buyer/images/logo.png' %}" alt="" width="60px">
+            <a class="navbar-brand" href="{% url 'index_view' %}">
+                <img src="{% static 'buyer/images/logo.png' %}" alt="" width="64px" height="30px"> 
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText"
-                aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
+            aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">LOFTY ART</a>
+                        <a class="nav-link active" aria-current="page" href="{% url 'index_view' %}">ZARA ART</a>
                     </li>
+                    
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url "login_view" %}">LogIn</a>
+                        <a class="nav-link" href="{% url 'shopping_view' %}">NEW_COLLECTION</a>
                     </li>
+                    
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'shopping_view' %}">CATEGORIES</a>
                     </li>
+
+                    
                     <!-- <li class="nav-item">
                         <a class="nav-link" href="#">SALE</a>
                     </li> -->
                     <li class="nav-item">
-                        <a class="nav-link" href="#">Cart</a>
+                        <a class="nav-link" href="{% url 'cart_view' %}">CART</a>
                     </li>
                     
                 </ul>
@@ -74,42 +79,42 @@
                     <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                         <li class="nav-item">
                             <a class="nav-link active" aria-current="page" href="{%  url 'profile_view' %}"><span
-                                    class="bi bi-person bi-2x"></span></a>
-                        </li>
-                    </ul>
-                </span>
+                                class="bi bi-person bi-2x"></span></a>
+                            </li>
+                        </ul>
+                    </span>
+                </div>
             </div>
-        </div>
-    </nav>
+        </nav>
     <hr style="margin:0px" class="w-100 border-dark-subtle">
-
+    
     {% if messages %}
     <div class="container-fluid">
         {% for message in messages %}
         <div class="alert alert-dismissible fade show {% if message.tags == 'error' %}alert-danger{% elif message.tags == 'warning' %}alert-warning{% elif message.tags == 'success' %}alert-success{% endif %}"
-            role="alert">
-            {{ message }}
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-        {% endfor %}
+        role="alert">
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
-    {% endif %}
+    {% endfor %}
+</div>
+{% endif %}
 
 
-    <!-- navbar end -->
-    {% block body %}
-    <!-- body content -->
-    {% endblock %}
+<!-- navbar end -->
+{% block body %}
+<!-- body content -->
+{% endblock %}
 
-    <!-- footer start -->
-    <footer class="bg-dark text-light py-4">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-md-4 mb-3 mb-md-0">
-                    <h5>About Us</h5>
-                    <p>At Lofty Outfits, we offer a curated collection of stylish ladies' clothing, embodying elegance
-                        and individuality. With premium fabrics and impeccable craftsmanship, we curate a lifestyle of
-                        confidence and timeless style for women everywhere.</p>
+<!-- footer start -->
+<footer class="bg-dark text-light py-4">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4 mb-3 mb-md-0">
+                <h5>About Us</h5>
+                <p>At ZARA ART, we offer a curated collection of stylish ladies' clothing, embodying elegance
+                    and individuality. With premium fabrics and impeccable craftsmanship, we curate a lifestyle of
+                    confidence and timeless style for women everywhere.</p>
                 </div>
                 <div class="col-md-2 mb-3 mb-md-0">
                     <h5>Shop</h5>
@@ -146,7 +151,7 @@
             </div>
             <hr class="my-4">
             <div class="text-center">
-                <p> Site design / logo &copy; <span id="current_year"></span> Witzcode; user contributions licensed
+                <p> Site design / logo &copy; <span id="current_year"></span> ZARA ART; user contributions licensed
                     under CC BY-SA. All Rights Reserved.</p>
             </div>
         </div>
@@ -160,12 +165,12 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"
-        integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
+    integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p"
         crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"
         integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF"
         crossorigin="anonymous"></script>
-
-</body>
-
-</html>
+        
+    </body>
+    
+    </html>
