@@ -24,7 +24,7 @@ class cartModel(baseModel):
     customer_id = models.ForeignKey(customersModel, on_delete=models.CASCADE)
     product_id = models.ForeignKey(productsModel, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
-
+        
 class ContactUSModel(baseModel):
 
     STATUS_CHOICES = (
@@ -40,8 +40,6 @@ class ContactUSModel(baseModel):
     message = models.TextField()
     status = models.CharField(choices=STATUS_CHOICES, default='unresolved', max_length=255)
     
-
-from django.db import models
 
 class Order(models.Model):
     customer_name = models.CharField(max_length=100)
@@ -61,3 +59,6 @@ class OrderItem(models.Model):
     
     def __str__(self):
         return f"{self.product_name} ({self.quantity})"
+
+
+

@@ -10,3 +10,6 @@ class OrderItemForm(forms.ModelForm):
     class Meta:
         model = OrderItem
         fields = ['product_name', 'quantity', 'price']
+        
+        
+        

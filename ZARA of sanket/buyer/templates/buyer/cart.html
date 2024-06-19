@@ -4,7 +4,7 @@
 Cart
 {% endblock %}
 {% block styles %}
-<style>
+<style> 
     .avatar-lg {
         height: 5rem;
         width: 5rem;
@@ -88,7 +88,6 @@ Cart
                             </ul>
                         </div>
                     </div>
-
                     <div>
                         <div class="row">
                             <div class="col-md-4">
@@ -123,7 +122,6 @@ Cart
                             </div>
                         </div>
                     </div>
-
                 </div>
             </div>
             {% endfor %}
@@ -181,9 +179,8 @@ Cart
                 </div>
             </div>
         </div>
-    </div>
+     </div>
     <!-- end row -->
-
 </div>
 <!-- razore pay callback link -->
 <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
@@ -270,11 +267,12 @@ Cart
                 name: "Acme Corp",
                 description: "Test Transaction",
                 image: "https://example.com/your_logo",
-                order_id: result.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1
+                order_id: result.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1.
                 handler: function (response) {
                   alert(response.razorpay_payment_id);
                   alert(response.razorpay_order_id);
                   alert(response.razorpay_signature);
+                  window.location.href = '/pay_success/';
                 },
                 prefill: {
                   name: "Gaurav Kumar",
@@ -312,14 +310,13 @@ $.ajax({
         if (response.id) {
             // Redirect to payment success page
             window.location.href = '/payment-success/';
-        }
+x        }
     },
     error: function(error) {
         alert('Payment failed: ' + error.responseText);
     }
 });
-
-   </script>
+</script>
 {% endblock %}
 
 

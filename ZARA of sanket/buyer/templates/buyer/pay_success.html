@@ -1,11 +1,53 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Payment Successful</title>
-</head>
-<body>
-    <h1>Payment Successful</h1>
-    <p>Thank you for your payment. Your transaction has been successfully processed.</p>
-    <a href="{% url 'home' %}">Return to Home</a>
-</body>
-</html>
+{% extends 'buyer/base.html' %}
+{% load static %}
+{% block title %}
+Payment Page
+{% endblock %}
+{% block styles %}
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f4f4f4;
+        margin: 0;
+        padding: 0;
+    }
+    .container {
+        max-width: 600px;
+        height: auto;
+        margin: 50px auto;
+        padding: 20px;
+        background-color: #fff;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+        color: #333;
+    }
+    p {
+        color: #666;
+        line-height: 1.6;
+    }
+    .button {
+        display: inline-block;
+        background-color: #007bff;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        transition: background-color 0.3s ease;
+    }
+    .button:hover {
+        background-color: #0056b3;
+    }
+</style>
+{% endblock %}
+{% block body %}
+<div class="container">
+    <h1>Thank You for Your Purchase!</h1>
+    <p>Your order has been successfully placed.</p>
+    <p>Your Order ID is: <strong>{{ order_id }}</strong></p>
+    <p>An email with further instructions will be sent to you shortly.</p>
+    <p>If you have any questions or concerns, please contact our customer support.</p>
+    <a href="{% url 'index_view' %}" class="button">Continue Shopping</a>
+</div>
+{% endblock %}

@@ -181,17 +181,19 @@ def new_collection_view(request):
     return render(request, 'buyer/new_collection.html', context)
 
 def prodcut_exist_in_cart(product_id):
+    
     return cartModel.objects.filter(product_id=product_id).exists()
 
 @login_required
 def add_item_in_cart(request, product_id):
     if not prodcut_exist_in_cart(product_id):
         new_cart_item = cartModel.objects.create(
-            customer_id_id=request.session['customer_id'],
-            product_id_id=product_id
+            customer_id_id = request.session['customer_id'],
+            product_id_id = product_id
         )
         new_cart_item.save()
         messages.success(request, "item added in cart.")
+        
     else:
         get_cart_item = cartModel.objects.get(product_id_id=product_id)
         get_cart_item.quantity += 1
@@ -241,7 +243,6 @@ def profile_view(request):
             get_address = customerAddressModel.objects.get(customer_id=customer_id_)
         except:
             get_address = False
-    
         context = {
             'get_customer':get_customer,
             'get_address':get_address
@@ -258,7 +259,6 @@ def update_personal_info(request):
         first_name_ = request.POST['firstname']
         last_name_ = request.POST['lastname']
         mobile_ = request.POST['mobile']
-
         try:
             get_customer = get_object_or_404(customersModel, customer_id=request.session['customer_id'])
         except customersModel.DoesNotExist:
@@ -340,7 +340,6 @@ def reset_password_otp_verification(request):
         otp_ = request.POST['otp']
         new_password_ = request.POST['new_password']
         confirm_password_ = request.POST['confirm_password']
-
         try : 
             check_user = customersModel.objects.get(email=cum_email)
         except Exception as e:
@@ -370,7 +369,6 @@ def buy_now(request, product_id):
 
 
 
-
 def order_detail(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
     return render(request, 'order_detail.html', {'order': order})
@@ -394,9 +392,20 @@ def pay(request,amt):
     amount = int(amt)*100
     data = { "amount": amount, "currency": "INR", "receipt": "order_rcptid_11" }
     print(amount, data, '====')
-    p = razorpay_client.order.create(data=data)   
+    p = razorpay_client.order.create(data=data)  
     print(p)
+    pay_success(request)
     return JsonResponse(p)
-    return render(request, "pay_success.html")
+
+@login_required
+def pay_success(request):
+    order_id = "#MN0124"  
+    context = {
+        'order_id': order_id
+    }
+    return render(request, "buyer/pay_success.html", context)
 
 
+
+ 
+    
