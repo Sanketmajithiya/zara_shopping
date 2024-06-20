@@ -1,23 +1,23 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib import messages
 from django.core.mail import send_mail
-from django.conf import settings    
-
+from django.conf import settings
 from authentication.models import customersModel, customerAddressModel
 from master.utils.LO_RANDOM.otp import generate_otp
 from master.utils.LO_VALIDATORS.fields import is_valid_email, is_valid_password
 from master.utils.LO_PAYMENT_GATWAY.razorpay_payment_gateway import razorpay_client
 from seller.models import productsModel, categoriesModel
-from .models import ContactUSModel,cartModel
+from .models import ContactUSModel, Order, OrderItem, cartModel
 import sanket_project
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
-from .models import Order, OrderItem, cartModel
 from .forms import OrderForm, OrderItemForm
-import razorpay
+import razorpay 
+from django.http import HttpResponse
+from master.utils.LO_UNIQUE.generate_order_id import generate_unique_order_id
 
 
 import os
@@ -54,7 +54,6 @@ def register_view(request):
                         )
                         new_customer.save()
 
-                        # send confirmation mail
                         subject = 'Your One-Time Password (OTP) | ZARA-OUTFITS'
                         message = f"""
                         Dear Customer,
@@ -141,6 +140,10 @@ def login_view(request):
                     if get_customer.password == password_:
                         print(get_customer.customer_id, "Added")
                         request.session['customer_id'] = get_customer.customer_id
+                        request.session['name'] = get_customer.first_name
+                        request.session['email'] = get_customer.email
+                        request.session['address'] = "surat"
+                        
                         messages.success(request, "Now, you are logged in.")
                         return redirect('index_view')
                     else:
@@ -373,13 +376,18 @@ def order_detail(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
     return render(request, 'order_detail.html', {'order': order})
 
+
 @login_required
 def cart_view(request):
+    # order_row = Order.objects.create()    
+    # order_id = generate_order_id.generate_unique_order_id()
+    
     cartItems = cartModel.objects.filter(customer_id_id=request.session['customer_id'])
     print(cartItems)
     context = {
-         'cartItems':cartItems
-     }
+         'cartItems':cartItems,
+        #  "order_id": order_id
+    }
     return render(request, 'buyer/cart.html',context)
 
 @login_required
@@ -391,21 +399,39 @@ def pay(request,amt):
     print(amt)
     amount = int(amt)*100
     data = { "amount": amount, "currency": "INR", "receipt": "order_rcptid_11" }
-    print(amount, data, '====')
     p = razorpay_client.order.create(data=data)  
-    print(p)
-    pay_success(request)
     return JsonResponse(p)
 
 @login_required
 def pay_success(request):
-    order_id = "#MN0124"  
+    # # Retrieve session data
+    customer_name = request.session.get('name')
+    customer_email = request.session.get('email')
+    shipping_address = request.session.get('address')
+
+    if not all([customer_name, customer_email, shipping_address]):
+        return HttpResponse('Required session data (name, email, address) not found.', status=400)
+        
+    order_id_ = generate_unique_order_id()
+    total_price_ = 10000  
+    try:
+        new_order = Order.objects.create(
+            order_id=order_id_,
+            customer_name=customer_name,
+            customer_email=customer_email,
+            shipping_address=shipping_address, 
+            total_price = total_price_  
+        )
+        new_order.save()
+        print("created successfully....")
+    except Exception as e:
+        print(e)
+
+    print(order_id_)
+
     context = {
-        'order_id': order_id
+        'order_id': order_id_
     }
+    
     return render(request, "buyer/pay_success.html", context)
-
-
-
- 
     

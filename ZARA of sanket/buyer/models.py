@@ -2,21 +2,7 @@ from django.db import models
 from master.models import baseModel
 from authentication.models import customersModel
 from seller.models import productsModel 
-
-# Create your models here.
-class ContactUSModel(baseModel):
-
-    STATUS_CHOICES = (
-        ('resolved', 'Resolved'),
-        ('unresolved', 'Unresolved'),
-        ('on_working', 'On Working'),
-    )
-    first_name = models.CharField(max_length=255)
-    last_name = models.CharField(max_length=255)
-    email = models.EmailField(max_length=255)
-    phone = models.CharField(max_length=255)
-    message = models.TextField()
-    status = models.CharField(choices=STATUS_CHOICES, default='unresolved', max_length=255)
+from master.utils.LO_UNIQUE import generate_order_id
 
 # Create your models here.
 
@@ -42,14 +28,21 @@ class ContactUSModel(baseModel):
     
 
 class Order(models.Model):
-    customer_name = models.CharField(max_length=100)
-    customer_email = models.EmailField()
-    shipping_address = models.TextField()
-    order_date = models.DateTimeField(auto_now_add=True)
-    total_price = models.DecimalField(max_digits=10, decimal_places=2)
+    order_id = models.CharField(max_length=100, blank=True, unique=True)
+    customer_name = models.CharField(max_length=100, blank=True)
+    customer_email = models.EmailField(max_length=254, blank=True)
+    shipping_address = models.TextField(blank=True)
+    order_date = models.DateTimeField(auto_now_add=True, blank=True)
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
     
     def __str__(self):
         return f"Order {self.id}"
+        
+    def save(self, *args, **kwargs):
+        if not self.order_id:
+            self.order_id = generate_order_id.generate_unique_order_id()
+            print(self.order_id)
+        super(Order, self).save(*args, **kwargs)
 
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)
