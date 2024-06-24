@@ -46,6 +46,10 @@ Payment Page
     <h1>Thank You for Your Purchase!</h1>
     <p>Your order has been successfully placed.</p>
     <p>Your Order ID is: <strong>{{ order_id }}</strong></p>
+    <p>name: <strong>{{ customer_name }}</strong></p>
+    <p>email: <strong>{{ customer_email }}</strong></p>
+    <p>address: <strong>{{ shipping_address }}</strong></p>
+    <p>amount: <strong>{{ amt }}</strong></p>
     <p>An email with further instructions will be sent to you shortly.</p>
     <p>If you have any questions or concerns, please contact our customer support.</p>
     <a href="{% url 'index_view' %}" class="button">Continue Shopping</a>

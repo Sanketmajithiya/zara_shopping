@@ -24,7 +24,9 @@ urlpatterns = [
     path('reset_password_otp_verification/', reset_password_otp_verification, name='reset_password_otp_verification'),
     path('order/<int:order_id>/', order_detail, name='order_detail'),  
     path('pay/<int:amt>/', pay, name='pay'),
-     path('pay_success/', pay_success, name='pay_success'),
+    path('pay_success/', pay_success, name='pay_success'),
+    path('cart/remove/<int:item_id>/', remove_from_cart, name='remove_from_cart'),
+
 ]
 
 

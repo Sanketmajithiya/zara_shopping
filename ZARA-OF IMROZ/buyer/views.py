@@ -396,7 +396,9 @@ def proceed_pay_view(request):
 
 @login_required
 def pay(request,amt):
-    print(amt)
+    request.session["amt"] = amt
+    print(int(amt))
+    print(type(amt))
     amount = int(amt)*100
     data = { "amount": amount, "currency": "INR", "receipt": "order_rcptid_11" }
     p = razorpay_client.order.create(data=data)  
@@ -404,15 +406,19 @@ def pay(request,amt):
 
 @login_required
 def pay_success(request):
+    ordered_items = cartModel.objects.all()
+    ordered_items.delete()
+
     customer_name = request.session.get('name')
     customer_email = request.session.get('email')
     shipping_address = request.session.get('address')
+    amt = request.session["amt"]
 
     if not all([customer_name, customer_email, shipping_address]):
         return HttpResponse('Required session data (name, email, address) not found.', status=400)
       
     order_id_ = generate_unique_order_id()
-    total_price_ = 10000  
+    total_price_ = amt  
     try:
         new_order = Order.objects.create(
             order_id=order_id_,
@@ -429,8 +435,16 @@ def pay_success(request):
     print(order_id_)
 
     context = {
-        'order_id': order_id_
+        'order_id': order_id_,
+        "customer_name":customer_name,
+        "customer_email":customer_email,
+        "shipping_address":shipping_address,
+        "amt": amt
     }
     return render(request, "buyer/pay_success.html", context)
     
     
+def remove_from_cart(request, item_id):
+    cart_item = get_object_or_404(cartModel, id=item_id)
+    cart_item.delete()
+    return redirect('cart_view')  # Redirect to the cart page after deletion
