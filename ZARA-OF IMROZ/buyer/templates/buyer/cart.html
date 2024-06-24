@@ -71,6 +71,7 @@ Cart
                                 </h5>
                             </div>
                         </div>
+                        <input type="checkbox" checked hidden>
                         <div class="flex-shrink-0 ms-2">
                             <ul class="list-inline mb-0 font-size-16">
                                 <li class="list-inline-item">
@@ -140,7 +141,7 @@ Cart
             <div class="mt-5 mt-lg-0">
                 <div class="card border shadow-none">
                     <div class="card-header bg-transparent border-bottom py-3 px-4">
-                        <h5 class="font-size-16 mb-0">Order Summary <span class="float-end">{{ order_id}}</span></h5>
+                        <h5 class="font-size-16 mb-0">Order Summary <span class="float-end"></span></h5>
                     </div>
                     <div class="card-body p-4 pt-2">
                         <div class="table-responsive">
@@ -148,7 +149,7 @@ Cart
                                 <tbody>
                                     <tr>
                                         <td>Sub Total :</td>
-                                        <td class="text-end" id="total-selected-cart-item-price">₹ 0</td>
+                                        <td class="text-end" id="total-selected-cart-item-price"></td>
                                     </tr>
                                     <tr>
                                         <td>Shipping Charge :</td>
@@ -223,46 +224,60 @@ document.addEventListener('DOMContentLoaded', function () {
         orderTotalPrice.textContent = finalPrice.toFixed(2);
         orderAmount.value = finalPrice.toFixed(2);
     }
-
-    document.getElementById('rzp-button1').onclick = function (e) {
+    
+    document.getElementById('rzp-button1').onclick = function (e){
         e.preventDefault();
-        var amt = document.getElementById('order_amount').value;
+
+        var amt = document.getElementById('order_amount').value
         fetch(`pay/${amt}`).then((data) => {
             return data.json();
-        }).then((data) => {
+        }).then((result) =>{
+            alert(result);
             var options = {
-                "key": "rzp_test_qQADNOGPB55l5k",
-                "amount": data.payment.amount,
-                "currency": data.payment.currency,
-                "name": "Acme Corp",
-                "description": "Test Transaction",
-                "image": "https://example.com/your_logo",
-                "order_id": data.payment.id,
-                "handler": function (response) {
-                    alert(response.razorpay_payment_id);
-                    alert(response.razorpay_order_id);
-                    alert(response.razorpay_signature);
+                key: "rzp_test_mURR0ARMkJjisn", // Enter the Key ID generated from the Dashboard
+                amount: result.amount, // Amount is in currency subunits. Default currency is INR. Hence, 50000 refers to 50000 paise
+                currency: "INR",
+                name: "Acme Corp",
+                description: "Test Transaction",
+                image: "https://example.com/your_logo",
+                order_id: result.id, //This is a sample Order ID. Pass the `id` obtained in the response of Step 1.
+                handler: function (response) {
+                  alert(response.razorpay_payment_id);
+                  alert(response.razorpay_order_id);
+                  alert(response.razorpay_signature);
+                  window.location.href = '/pay_success/';
                 },
-                "prefill": {
-                    "name": "Gaurav Kumar",
-                    "email": "gaurav.kumar@example.com",
-                    "contact": "9999999999"
+                prefill: {
+                  name: "Gaurav Kumar",
+                  email: "gaurav.kumar@example.com",
+                  contact: "9000090000",
                 },
-                "notes": {
-                    "address": "Razorpay Corporate Office"
+                notes: {
+                  address: "Razorpay Corporate Office",
                 },
-                "theme": {
-                    "color": "#3399cc"
-                }
-            };
-            var rzp1 = new Razorpay(options);
-            rzp1.open();
-        }).catch((error) => {
-            console.error(error);
-        });
-    };
+                theme: {
+                  color: "#3399cc",
+                },
+              };
+              var rzp1 = new Razorpay(options);
+              rzp1.on("payment.failed", function (response) {
+                alert(response.error.code);
+                alert(response.error.description);
+                alert(response.error.source);
+                alert(response.error.step);
+                alert(response.error.reason);
+                alert(response.error.metadata.order_id);
+                alert(response.error.metadata.payment_id);
+              });
+              rzp1.open();
+            })
+            .catch((err) => {
+              console.log(err);
+            });
+    }
 
     calculateCartTotal();
 });
+
 </script>
 {% endblock %}

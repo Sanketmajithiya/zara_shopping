@@ -15,7 +15,6 @@ from django.http import JsonResponse
 from django.contrib.auth.decorators import login_required
 from django.forms import modelformset_factory
 from .forms import OrderForm, OrderItemForm
-import razorpay 
 from django.http import HttpResponse
 from master.utils.LO_UNIQUE.generate_order_id import generate_unique_order_id
 
@@ -378,15 +377,11 @@ def order_detail(request, order_id):
 
 
 @login_required
-def cart_view(request):
-    # order_row = Order.objects.create()    
-    # order_id = generate_order_id.generate_unique_order_id()
-    
+def cart_view(request):    
     cartItems = cartModel.objects.filter(customer_id_id=request.session['customer_id'])
     print(cartItems)
     context = {
          'cartItems':cartItems,
-        #  "order_id": order_id
     }
     return render(request, 'buyer/cart.html',context)
 
@@ -395,28 +390,28 @@ def proceed_pay_view(request):
     return render(request, 'buyer/proceed_to_pay.html')
 
 @login_required
-def pay(request,amt):
+def pay(request, amt):
     request.session["amt"] = amt
-    print(int(amt))
-    print(type(amt))
-    amount = int(amt)*100
-    data = { "amount": amount, "currency": "INR", "receipt": "order_rcptid_11" }
-    p = razorpay_client.order.create(data=data)  
-    return JsonResponse(p)
+    amount = int(float(amt) * 100)  # Convert to paise
+    data = {"amount": amount, "currency": "INR", "receipt": "order_rcptid_11"}
+    try:
+        razorpay_order = razorpay_client.order.create(data=data)
+        return JsonResponse(razorpay_order)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=400)
 
 @login_required
 def pay_success(request):
-    ordered_items = cartModel.objects.all()
+    ordered_items = cartModel.objects.filter(customer_id_id=request.session['customer_id'])
     ordered_items.delete()
-
     customer_name = request.session.get('name')
     customer_email = request.session.get('email')
     shipping_address = request.session.get('address')
-    amt = request.session["amt"]
+    amt = request.session.get("amt")
 
-    if not all([customer_name, customer_email, shipping_address]):
-        return HttpResponse('Required session data (name, email, address) not found.', status=400)
-      
+    if not all([customer_name, customer_email, shipping_address, amt]):
+        return HttpResponse('Required session data (name, email, address, amount) not found.', status=400)
+   
     order_id_ = generate_unique_order_id()
     total_price_ = amt  
     try:
@@ -425,26 +420,23 @@ def pay_success(request):
             customer_name=customer_name,
             customer_email=customer_email,
             shipping_address=shipping_address, 
-            total_price = total_price_  
+            total_price=total_price_
         )
         new_order.save()
         print("created successfully....")
     except Exception as e:
         print(e)
 
-    print(order_id_)
-
     context = {
         'order_id': order_id_,
-        "customer_name":customer_name,
-        "customer_email":customer_email,
-        "shipping_address":shipping_address,
+        "customer_name": customer_name,
+        "customer_email": customer_email,
+        "shipping_address": shipping_address,
         "amt": amt
     }
     return render(request, "buyer/pay_success.html", context)
     
-    
 def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(cartModel, id=item_id)
     cart_item.delete()
-    return redirect('cart_view')  # Redirect to the cart page after deletion
+    return redirect('cart_view')  
