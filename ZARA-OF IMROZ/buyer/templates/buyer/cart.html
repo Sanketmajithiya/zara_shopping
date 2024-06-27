@@ -177,6 +177,10 @@ document.addEventListener('DOMContentLoaded', function () {
     var totalSelectedPriceElement = document.getElementById('total-selected-cart-item-price');
     var orderTotalPrice = document.getElementById('final-order-price');
     var orderAmount = document.getElementById('order_amount');
+    var image = document.getElementById('');
+
+
+    
 
     quantitySelects.forEach(function (select) {
         updateTotalPrice(select);
@@ -191,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     checkboxes.forEach(function (checkbox) {
         checkbox.addEventListener('change', function () {
-            calculateCartTotal();
+            calculateCartTotal();c  
         });
     });
 
@@ -203,7 +207,7 @@ document.addEventListener('DOMContentLoaded', function () {
         var sellingPrice = parseFloat(sellingPriceElement.textContent.trim());
         var quantity = parseInt(selectElement.value);
         var totalPrice = sellingPrice * quantity;
-
+        
         totalPriceElement.textContent = '₹ ' + totalPrice.toFixed(2);
     }
 

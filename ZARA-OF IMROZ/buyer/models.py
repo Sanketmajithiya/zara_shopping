@@ -10,6 +10,7 @@ class cartModel(baseModel):
     customer_id = models.ForeignKey(customersModel, on_delete=models.CASCADE)
     product_id = models.ForeignKey(productsModel, on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField(default=1)
+
         
 class ContactUSModel(baseModel):
 
@@ -32,6 +33,7 @@ class Order(models.Model):
     customer_name = models.CharField(max_length=100, blank=True)
     customer_email = models.EmailField(max_length=254, blank=True)
     shipping_address = models.TextField(blank=True)
+    # product_id = models.ForeignKey(productsModel,on_delete=models.CASCADE)
     order_date = models.DateTimeField(auto_now_add=True, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
     

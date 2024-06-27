@@ -1,0 +1,123 @@
+{% extends 'buyer/base.html' %}
+
+{% load static %}
+
+{% block title %}
+My Orders
+{% endblock %}
+
+{% block style %}
+<style>
+    .avatar-lg {
+        height: 5rem;
+        width: 5rem;
+    }
+
+    .font-size-18 {
+        font-size: 18px !important;
+    }
+
+    .text-truncate {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    a {
+        text-decoration: none !important;
+    }
+
+    .w-xl {
+        min-width: 160px;
+    }
+
+    .card {
+        margin-bottom: 24px;
+        -webkit-box-shadow: 0 2px 3px #e4e8f0;
+        box-shadow: 0 2px 3px #e4e8f0;
+    }
+
+    .card {
+        position: relative;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: normal;
+        -ms-flex-direction: column;
+        flex-direction: column;
+        min-width: 0;
+        word-wrap: break-word;
+        background-color: #fff;
+        background-clip: border-box;
+        border: 1px solid #eff0f2;
+        border-radius: 1rem;
+    }
+
+    .card-header {
+        background-color: #17a2b8;
+        color: white;
+        font-weight: bold;
+    }
+
+    .card-body {
+        padding: 1.5rem;
+    }
+
+    .order-details {
+        margin-top: 1rem;
+    }
+
+    .order-detail {
+        margin-bottom: 0.5rem;
+    }
+
+    .order-detail strong {
+        margin-right: 0.5rem;
+    }
+</style>    
+{% endblock %}
+
+{% block body %}
+
+<div class="container">
+    <div class="row my-5">
+        <div class="col-xl-8 mx-auto">
+            {% for order in orders %}
+            <div class="card">
+                <div class="card-header">
+                   Order Details
+                </div>
+                <div class="card-body">
+                    <div class="order-detail">
+                            <div class="order-details">
+                            <strong>Order ID:</strong> {{ order.order_id }}
+                        </div>
+                        <div class="order-detail">
+                            <strong> Order Date:</strong> {{ order.order_date}}
+                        </div>
+                        <div class="order-detail">
+                            <strong>Customer Name:</strong> {{ order.customer_name }}
+                        </div>
+                        <div class="order-detail">
+                            <strong>Email:</strong> {{ order.customer_email }}
+                        </div>
+                        <div class="order-detail">
+                            <strong>Shipping Address:</strong> {{ order.shipping_address }}
+                        </div>
+                        <div class="order-detail">
+                            <strong>Total Price:</strong> ₹{{ order.total_price }}
+                        </div>
+                        <form action="{% url 'remove_from_myorders' %}" method="post">
+                            {% csrf_token %}
+                            <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                            <button type="submit" class="btn btn-danger">Delete</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}

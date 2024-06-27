@@ -336,6 +336,7 @@ def forgot_password_view(request):
                 return render(request, 'buyer/change_password.html', context)
     return render(request, 'buyer/forgot.html')
 
+
 def reset_password_otp_verification(request):
     if request.method == "POST":
         cum_email = request.POST['email']
@@ -370,7 +371,7 @@ def buy_now(request, product_id):
     return render(request, "buyer/payment_page.html")
 
 
-
+@login_required
 def order_detail(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
     return render(request, 'order_detail.html', {'order': order})
@@ -384,6 +385,17 @@ def cart_view(request):
          'cartItems':cartItems,
     }
     return render(request, 'buyer/cart.html',context)
+
+@login_required
+def myorder_view(request):    
+    
+    orders_objects = Order.objects.all()
+    # print(cartItems)
+    context = {
+         'orders':orders_objects,
+    }
+    return render(request, 'buyer/myorders.html',context)
+
 
 @login_required
 def proceed_pay_view(request):
@@ -422,7 +434,7 @@ def pay_success(request):
             shipping_address=shipping_address, 
             total_price=total_price_
         )
-        new_order.save()
+        # new_order.save()
         print("created successfully....")
     except Exception as e:
         print(e)
@@ -435,8 +447,31 @@ def pay_success(request):
         "amt": amt
     }
     return render(request, "buyer/pay_success.html", context)
-    
+ 
+@login_required   
 def remove_from_cart(request, item_id):
     cart_item = get_object_or_404(cartModel, id=item_id)
     cart_item.delete()
     return redirect('cart_view')  
+
+
+@login_required
+def remove_from_myorders(request):
+    if request.method == 'POST':
+        order_id = request.POST.get('order_id')
+        order = Order.objects.get(order_id = order_id )
+        order.delete()
+        response = redirect("myorder_view")
+        messages.success(request,"Delete Successfull")
+        return response
+    return redirect("myorder_view")
+
+        
+
+
+
+
+
+
+
+
