@@ -75,7 +75,7 @@ Cart
                         <div class="flex-shrink-0 ms-2">
                             <ul class="list-inline mb-0 font-size-16">
                                 <li class="list-inline-item">
-                                    <a href="{% url 'remove_from_cart' cartitem.id %}" class="text-muted px-1">
+                                    <a href="{% url 'remove_from_cart' item_id=cartitem.product_id_id %}" class="text-muted px-1">
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </li>

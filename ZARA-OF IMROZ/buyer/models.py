@@ -2,7 +2,7 @@ from django.db import models
 from master.models import baseModel
 from authentication.models import customersModel
 from seller.models import productsModel 
-from master.utils.LO_UNIQUE import generate_order_id
+from master.utils.LO_UNIQUE.generate_order_id import generate_unique_order_id
 
 # Create your models here.
 
@@ -33,7 +33,7 @@ class Order(models.Model):
     customer_name = models.CharField(max_length=100, blank=True)
     customer_email = models.EmailField(max_length=254, blank=True)
     shipping_address = models.TextField(blank=True)
-    # product_id = models.ForeignKey(productsModel,on_delete=models.CASCADE)
+ 
     order_date = models.DateTimeField(auto_now_add=True, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
     
@@ -42,7 +42,7 @@ class Order(models.Model):
         
     def save(self, *args, **kwargs):
         if not self.order_id:
-            self.order_id = generate_order_id.generate_unique_order_id()
+            self.order_id = generate_unique_order_id()
             print(self.order_id)
         super(Order, self).save(*args, **kwargs)
 

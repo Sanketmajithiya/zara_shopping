@@ -184,7 +184,7 @@ def new_collection_view(request):
 
 def prodcut_exist_in_cart(product_id):
     
-    return cartModel.objects.filter(product_id=product_id).exists()
+    return cartModel.objects.filter(product_id_id=product_id).order_by('-created_at').exists()
 
 @login_required
 def add_item_in_cart(request, product_id):
@@ -195,13 +195,14 @@ def add_item_in_cart(request, product_id):
         )
         new_cart_item.save()
         messages.success(request, "item added in cart.")
+        return redirect('shopping_view')
         
     else:
         get_cart_item = cartModel.objects.get(product_id_id=product_id)
         get_cart_item.quantity += 1
         get_cart_item.save()
-    
-    return redirect('cart_view')
+        messages.error(request,'This Item already in Cart')
+        return redirect('shopping_view')
 
 def shopping_view(request):
     categoris = categoriesModel.objects.all()
@@ -388,9 +389,7 @@ def cart_view(request):
 
 @login_required
 def myorder_view(request):    
-    
     orders_objects = Order.objects.all()
-    # print(cartItems)
     context = {
          'orders':orders_objects,
     }
@@ -411,10 +410,15 @@ def pay(request, amt):
         return JsonResponse(razorpay_order)
     except Exception as e:
         return JsonResponse({'error': str(e)}, status=400)
+    
+    
 
 @login_required
 def pay_success(request):
     ordered_items = cartModel.objects.filter(customer_id_id=request.session['customer_id'])
+    my_orders = list(ordered_items)
+    print(my_orders,'****************')
+    
     ordered_items.delete()
     customer_name = request.session.get('name')
     customer_email = request.session.get('email')
@@ -424,33 +428,34 @@ def pay_success(request):
     if not all([customer_name, customer_email, shipping_address, amt]):
         return HttpResponse('Required session data (name, email, address, amount) not found.', status=400)
    
-    order_id_ = generate_unique_order_id()
     total_price_ = amt  
     try:
-        new_order = Order.objects.create(
-            order_id=order_id_,
+        new_orders = Order(
             customer_name=customer_name,
             customer_email=customer_email,
             shipping_address=shipping_address, 
             total_price=total_price_
         )
-        # new_order.save()
         print("created successfully....")
+        new_orders.save()
     except Exception as e:
         print(e)
-
+    
     context = {
-        'order_id': order_id_,
+        'order_id' : new_orders.order_id,
+        'products' : my_orders,
         "customer_name": customer_name,
         "customer_email": customer_email,
         "shipping_address": shipping_address,
         "amt": amt
     }
+    
     return render(request, "buyer/pay_success.html", context)
  
 @login_required   
 def remove_from_cart(request, item_id):
-    cart_item = get_object_or_404(cartModel, id=item_id)
+    cart_item = cartModel.objects.get(product_id_id=item_id)
+    # cart_item = get_object_or_404(cartModel, id=item_id)
     cart_item.delete()
     return redirect('cart_view')  
 
@@ -465,6 +470,8 @@ def remove_from_myorders(request):
         messages.success(request,"Delete Successfull")
         return response
     return redirect("myorder_view")
+
+
 
         
 

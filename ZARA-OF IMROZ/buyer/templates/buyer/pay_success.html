@@ -5,6 +5,9 @@ Payment Page
 {% endblock %}
 {% block styles %}
 <style>
+    .myimage{
+        width: 200px;
+    }
     body {
         font-family: Arial, sans-serif;
         background-color: #f4f4f4;
@@ -45,6 +48,10 @@ Payment Page
 <div class="container">
     <h1>Thank You for Your Purchase!</h1>
     <p>Your order has been successfully placed.</p>
+    {% for product in products %}
+    <p>Your Product ID is: <strong>{{ product.product_id_id }}</strong></p>
+    <img class="myimage" src="{{product.product_id.image.url}}" alt="logo">
+    {% endfor %}
     <p>Your Order ID is: <strong>{{ order_id }}</strong></p>
     <p>name: <strong>{{ customer_name }}</strong></p>
     <p>email: <strong>{{ customer_email }}</strong></p>
