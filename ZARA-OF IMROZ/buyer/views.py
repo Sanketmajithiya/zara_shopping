@@ -387,13 +387,13 @@ def cart_view(request):
     }
     return render(request, 'buyer/cart.html',context)
 
-@login_required
-def myorder_view(request):    
-    orders_objects = Order.objects.all()
-    context = {
-         'orders':orders_objects,
-    }
-    return render(request, 'buyer/myorders.html',context)
+# @login_required
+# def myorder_view(request):    
+#     orders_objects = Order.objects.all()
+#     context = {
+#          'orders':orders_objects,
+#     }
+#     return render(request, 'buyer/myorders.html',context)
 
 
 @login_required
@@ -417,9 +417,8 @@ def pay(request, amt):
 def pay_success(request):
     ordered_items = cartModel.objects.filter(customer_id_id=request.session['customer_id'])
     my_orders = list(ordered_items)
-    print(my_orders,'****************')
+    print("Ordered items retrieved:", my_orders)
     
-    ordered_items.delete()
     customer_name = request.session.get('name')
     customer_email = request.session.get('email')
     shipping_address = request.session.get('address')
@@ -436,26 +435,28 @@ def pay_success(request):
             shipping_address=shipping_address, 
             total_price=total_price_
         )
-        print("created successfully....")
         new_orders.save()
+        
+        for data in ordered_items:
+            print(data.product_id.title,data.product_id.mrp_price,data.quantity)  
+            OrderItem.objects.create(order=new_orders,product_name=data.product_id.title,quantity=data.quantity,price=data.product_id.mrp_price)
+        
+        ordered_items.delete()
     except Exception as e:
         print(e)
     
     context = {
-        'order_id' : new_orders.order_id,
-        'products' : my_orders,
+        "products" : my_orders,
         "customer_name": customer_name,
         "customer_email": customer_email,
         "shipping_address": shipping_address,
         "amt": amt
     }
-    
-    return render(request, "buyer/pay_success.html", context)
+    return render(request, "buyer/new.html", context)
  
 @login_required   
 def remove_from_cart(request, item_id):
     cart_item = cartModel.objects.get(product_id_id=item_id)
-    # cart_item = get_object_or_404(cartModel, id=item_id)
     cart_item.delete()
     return redirect('cart_view')  
 
@@ -470,15 +471,3 @@ def remove_from_myorders(request):
         messages.success(request,"Delete Successfull")
         return response
     return redirect("myorder_view")
-
-
-
-        
-
-
-
-
-
-
-
-

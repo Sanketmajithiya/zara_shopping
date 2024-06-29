@@ -1,0 +1,65 @@
+{% extends 'buyer/base.html' %}
+
+{% load static %}
+
+{% block title %}
+My Orders
+{% endblock %}
+
+{% block styles %}
+<style>
+    .order-card {
+        margin-bottom: 20px;
+    }
+    .order-details {
+        margin-bottom: 10px;
+    }
+    .order-image {
+        width: 100px;
+        height: auto;
+        margin-right: 20px;
+    }
+    .order-header {
+        font-size: 1.5rem;
+        margin-bottom: 15px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="container">
+    <div class="row">
+        <div class="col-xl-8 mx-auto mt-3">
+            {% for order in products %}
+            <div class="card order-card">
+                <div class="card-header order-header">
+                    Order Details
+                </div>
+                <div class="card-body">
+                    <div class="order-details">
+                        <strong>Product ID:</strong> {{ order.product_id_id }}
+                    </div>
+                    <div class="order-details">
+                        <strong>Customer ID:</strong> {{ order.customer_id }}
+                    </div>
+                    <div class="order-details d-flex align-items-center">
+                        <img src="{{ order.product_id.image.url }}" alt="Product Image" class="order-image rounded">
+                        <div>
+                            <strong>Customer Name:</strong> {{ order.customer_id.first_name }} {{ order.customer_id.last_name }}<br>
+                            <strong>Email:</strong> {{ order.customer_id.email }}<br>
+                            <strong>Shipping Address:</strong> {{ shipping_address }}<br>
+                            <strong>Total Price:</strong> ₹{{ amt }}
+                        </div>
+                    </div>
+                    <form action="{% url 'remove_from_myorders' %}" method="post">
+                        {% csrf_token %}
+                        <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                        <button type="submit" class="btn btn-danger mt-3">Delete</button>
+                    </form>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
