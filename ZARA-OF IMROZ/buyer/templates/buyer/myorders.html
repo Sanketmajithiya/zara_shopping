@@ -1,4 +1,4 @@
-<!-- {% extends 'buyer/base.html' %}
+{% extends 'buyer/base.html' %}
 
 {% load static %}
 
@@ -39,12 +39,7 @@ My Orders
 
     .card {
         position: relative;
-        display: -webkit-box;
-        display: -ms-flexbox;
         display: flex;
-        -webkit-box-orient: vertical;
-        -webkit-box-direction: normal;
-        -ms-flex-direction: column;
         flex-direction: column;
         min-width: 0;
         word-wrap: break-word;
@@ -75,49 +70,72 @@ My Orders
     .order-detail strong {
         margin-right: 0.5rem;
     }
-</style>    
+
+    .btn-danger {
+        background-color: #dc3545;
+        border: none;
+        padding: 0.5rem 1rem;
+        border-radius: 0.25rem;
+        color: white;
+        cursor: pointer;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+    }
+</style>
 {% endblock %}
 
 {% block body %}
-{{products}}
 <div class="container">
     <div class="row my-5">
         <div class="col-xl-8 mx-auto">
-            {% for order in orders %}
-            <div class="card">
-                <div class="card-header">
-                   Order Details
-                </div>
-                <div class="card-body">
-                    <div class="order-detail">
-                            <div class="order-details">
-                            <strong>Order ID:</strong> {{ order.order_id }}
+            {% if orders %}
+                {% for order in orders %}
+                    <div class="card">
+                        <div class="card-header">
+                            Order Details
                         </div>
-                        <div class="order-detail">
-                            <strong> Order Date:</strong> {{ order.order_date}}
+                        <div class="card-body">
+                            <div class="order-detail">
+                                <strong>Product Name:</strong> {{ order.product_id }}
+                            </div>
+                            <div class="order-detail">
+                                <strong>Order ID:</strong> {{ order.order_id }}
+                            </div>
+                            <div class="order-detail">
+                                <img src="{{ MEDIA_URL }}{{ order.product_id.image.url }}" alt="Product Image" style="width: 100px;">
+                            </div>
+                            <div class="order-detail">
+                                <strong>Order Quantity:</strong> {{ order.quantity }}
+                            </div>
+                            <div class="order-detail">
+                                <strong>Order Date:</strong> {{ order.order_id.order_date }}
+                            </div>
+                            <div class="order-detail">
+                                <strong>Customer Name:</strong> {{ order.order_id.customer_name }}
+                            </div>
+                            <div class="order-detail">
+                                <strong>Email:</strong> {{ order.order_id.customer_email }}
+                            </div>
+                            <div class="order-detail">
+                                <strong>Shipping Address:</strong> {{ order.order_id.shipping_address }}
+                            </div>
+                            <div class="order-detail">
+                                <strong>Total Price:</strong> ₹{{ order.order_id.total_price }}
+                            </div>
+                            <form action="{% url 'remove_from_myorders' %}" method="post">
+                                {% csrf_token %}
+                                <input type="hidden" name="order_id" value="{{ order.order_id }}">
+                                <button type="submit" class="btn btn-danger">Delete</button>
+                            </form>
                         </div>
-                        <div class="order-detail">
-                            <strong>Customer Name:</strong> {{ order.customer_name }}
-                        </div>
-                        <div class="order-detail">
-                            <strong>Email:</strong> {{ order.customer_email }}
-                        </div>
-                        <div class="order-detail">
-                            <strong>Shipping Address:</strong> {{ order.shipping_address }}
-                        </div>
-                        <div class="order-detail">
-                            <strong>Total Price:</strong> ₹{{ order.total_price }}
-                        </div>
-                        <form action="{% url 'remove_from_myorders' %}" method="post">
-                            {% csrf_token %}
-                            <input type="hidden" name="order_id" value="{{ order.order_id }}">
-                            <button type="submit" class="btn btn-danger">Delete</button>
-                        </form>
                     </div>
-                </div>
-            </div>
-            {% endfor %}
+                {% endfor %}
+            {% else %}
+                <div class="text-center">No Orders</div>
+            {% endif %}
         </div>
     </div>
 </div>
-{% endblock %} -->
+{% endblock %}
