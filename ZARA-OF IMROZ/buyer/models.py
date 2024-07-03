@@ -33,6 +33,7 @@ class Order(models.Model):
     customer_name = models.CharField(max_length=100, blank=True)
     customer_email = models.EmailField(max_length=254, blank=True)
     shipping_address = models.TextField(blank=True)
+ 
     order_date = models.DateTimeField(auto_now_add=True, blank=True)
     total_price = models.DecimalField(max_digits=10, decimal_places=2, blank=True)
     
@@ -42,7 +43,7 @@ class Order(models.Model):
     def save(self, *args, **kwargs):
         if not self.order_id:
             self.order_id = generate_unique_order_id()
-            print(self.order_id)        
+            print(self.order_id)
         super(Order, self).save(*args, **kwargs)
 
 class OrderItem(models.Model):
@@ -53,16 +54,6 @@ class OrderItem(models.Model):
     
     def __str__(self):
         return f"{self.product_name} ({self.quantity})"
-    
-
-class MyOrderItem(models.Model):
-    order_id = models.ForeignKey(Order, on_delete=models.CASCADE)
-    product_id = models.ForeignKey(productsModel,on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField()
-    price = models.DecimalField(max_digits=10, decimal_places=2)
-    
-    def __str__(self):
-        return f"{self.product_id}_{self.quantity}"
 
 
 
