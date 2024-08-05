@@ -10,7 +10,5 @@ urlpatterns = [
     path("approvebook/<str:name>/<str:book_title>/",views.approvedRequest,name="approvedRequest"),
     path("editpage/<int:pk>",views.Editpage,name="editpage"),
     path("Update/<int:pk>",views.update_view,name="update"),
-    path("delete/<int:pk>",views.DeleteData,name="delete"),
-    # path("request/<int:pk>",views.requestData,name="request"),
-    
+    path("delete/<int:pk>",views.DeleteData,name="delete"),  
 ]

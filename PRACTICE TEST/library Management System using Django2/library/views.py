@@ -66,7 +66,6 @@ def update_view(request,pk):
     book.author = request.POST["author"]
     book.published_date = request.POST["published_date"]
     book.is_in_stock = request.POST["is_in_stock"]
-    # Query for update
     book.save()
     
     return redirect('dashboardView')
@@ -74,22 +73,11 @@ def update_view(request,pk):
 
 def DeleteData(request,pk):
     ddata = Book.objects.get(id=pk)
-    # Query for Delete
     ddata.delete()
     return redirect('dashboardView')
 
 
-def requestData(request,pk):
 
-    book = Book.objects.get(id=pk)
-    if request.method == 'POST':
-        book.title = request.POST.get("title")
-        book.author = request.POST.get("author")
-        book.published_date = request.POST.get("published_date")
-        book.is_in_stock = request.POST.get("is_in_stock")
-        # Query for update
-        book.save()
-        
-        return render(request,'request.html')
+
 
 
