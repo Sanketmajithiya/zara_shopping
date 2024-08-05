@@ -1,0 +1,54 @@
+{% extends "library/layout.html" %}
+
+{% block title %}
+  All Book
+{% endblock title %}
+
+{% block content %}
+<table class="table table-bordered mt-3 table-striped">
+  <thead>
+    <tr>
+      <th scope="col">No</th>
+      <th scope="col">Title</th>
+      <th scope="col">Autor</th>
+      <th scope="col">Publish Date</th>
+      <th scope="col">Is In Stock</th>
+      {% if request.COOKIES.role == "librarian" %} 
+      <th scope="col">Details</th>
+      <th scope="col">Action</th>
+      {% else %}
+      <th scope="col">Action</th>
+      <th scope="col">Update_date</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in books %} 
+        <tr>
+          <th>{{forloop.counter}}</th>
+          <th>{{i.title}}</th>
+          <td>{{i.author}}</td>
+          <td>{{i.published_date}}</td>
+          <td>{{i.Update_date}}</td>
+          {% if i.is_in_stock == False %}
+            <td> Not In Stock</td>
+          {% else %}
+            <td> In Stock</td>
+          {% endif %} 
+          <td>
+            <a href="" class="btn btn-info">Details</a>
+          </td>
+          <td>
+            <a href="#" class="btn btn-warning">Request</a>
+          </td>
+          {% if request.COOKIES.role == "librarian" %}
+            <td>
+              <a href="{% url 'editpage' pk=i.pk %}" class="btn btn-warning">Update</a>
+              <a href="{% url 'delete' pk=i.pk %}" class="btn btn-danger">Delete</a>
+            </td>
+          {% endif %}
+        </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}

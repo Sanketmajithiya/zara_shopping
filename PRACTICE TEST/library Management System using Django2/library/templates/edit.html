@@ -1,0 +1,33 @@
+{% extends "library/layout.html" %}
+
+{% block title %}
+  Edit Book
+{% endblock title %}
+
+{% block content %}
+
+
+<h1>Edit Book</h1>
+<form action="{% url 'update' pk=key2.id %}" method="post">
+  {% csrf_token %}
+  <div class="form-group">
+    <label for="title">Title:</label>
+    <input type="text" id="title" name="title" class="form-control" value="{{ key2.title }}">
+  </div>
+  <div class="form-group">
+    <label for="author">Author:</label>
+    <input type="text" id="author" name="author" class="form-control" value="{{ key2.author }}">
+  </div>
+  <div class="form-group">
+    <label for="published_date">Published Date:</label>
+    <input type="date" id="published_date" name="published_date" class="form-control" value="{{ key2.published_date }}"></div>
+  <div class="form-group">
+    <label for="is_in_stock">Is In Stock:</label>
+    <select id="is_in_stock" name="is_in_stock" class="form-control">
+      <option value="True" {% if key2.is_in_stock %}selected{% endif %}>In Stock</option>
+      <option value="False" {% if not key2.is_in_stock %}selected{% endif %}>Not In Stock</option>
+    </select>
+  </div>
+  <button type="submit" class="btn btn-primary">Save</button>
+</form>
+{% endblock content %}

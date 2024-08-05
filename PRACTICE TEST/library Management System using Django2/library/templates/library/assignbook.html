@@ -1,0 +1,36 @@
+{% extends "library/layout.html" %}
+
+{% block title %}
+  Assign Books
+{% endblock title %}
+
+{% block content %}
+<table class="table table-bordered mt-3 table-striped">
+  <thead>
+    <tr>
+      <th scope="col">No</th>
+      <th scope="col">Name</th>
+      <th scope="col">Book</th>
+      {% if request.COOKIES.role == "librarian" %}
+        <th scope="col">Action</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in books %}
+      {% if i.approved %}
+        <tr>
+          <th>{{forloop.counter}}</th>
+          <th>{{i.client.firstname}}</th>
+          <td>{{i.book}}</td>
+          {% if request.COOKIES.role == "librarian" %}
+          <td>
+            <a href="" class="btn btn-primary">revoke</a>
+          </td>
+          {% endif %}
+        </tr> 
+      {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}

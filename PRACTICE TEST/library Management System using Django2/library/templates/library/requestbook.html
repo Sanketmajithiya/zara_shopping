@@ -1,0 +1,45 @@
+{% extends "library/layout.html" %}
+
+{% block title %}
+  Assign Books
+{% endblock title %}
+
+<style>
+    input[type="checkbox"]{
+        width: 100px;
+    }
+</style>
+
+{% block content %}
+<table class="table table-bordered mt-3 table-striped">
+  <thead>
+    <tr>
+      <th scope="col">No</th>
+      <th scope="col">Name</th>
+      <th scope="col">Book</th>
+      <th scope="col">Approve</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for i in books %}
+        {% if not i.approved %}
+            <tr>
+            <th>{{forloop.counter}}</th>
+            <th>{{i.client.firstname}}</th>
+            <td>{{i.book}}</td>
+            <form action="{% url 'approvedRequest' name=i.client.firstname book_title=i.book.title %}" method="post">
+                {% csrf_token %}
+                <td>
+                    <input type="checkbox" name="approve" id="">
+                </td>
+                <td>
+                    <Button type="submit">Submit</Button>
+                </td>
+            </form>
+            </tr>
+        {% endif %}
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock content %}
