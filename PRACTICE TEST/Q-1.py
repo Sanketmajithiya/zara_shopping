@@ -20,7 +20,7 @@ Operation 1: Replace d with c.
 ANS :-
 """ 
 x = "abad"
-y = "1234"
+y = "abac"
 
 list1 = list(x)
 list2 = list(y)
